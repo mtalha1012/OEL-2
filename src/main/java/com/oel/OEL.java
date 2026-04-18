@@ -15,6 +15,10 @@ public class OEL extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/oel/GUI.fxml"));
         Scene scene = new Scene(loader.load());
 
+        primaryStage.setTitle("ShopEase");
+        primaryStage.setOnCloseRequest(e -> {
+            System.exit(0);
+        });
         primaryStage.setScene(scene);
         primaryStage.show();
     }
