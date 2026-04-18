@@ -6,12 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,40 +19,32 @@ import java.util.ResourceBundle;
 
 public class GUI implements Initializable {
 
-    // ── Product table ──────────────────────────────────────────────
-    @FXML private TableView<Product>          productTable;
+    @FXML private TableView<Product>            productTable;
     @FXML private TableColumn<Product, Integer> colProdId;
     @FXML private TableColumn<Product, String>  colProdName;
     @FXML private TableColumn<Product, Double>  colProdPrice;
     @FXML private TableColumn<Product, Integer> colProdStock;
 
-    // ── Cart table ─────────────────────────────────────────────────
     @FXML private TableView<CartItem>            cartTable;
     @FXML private TableColumn<CartItem, String>  colCartName;
     @FXML private TableColumn<CartItem, Integer> colCartQty;
     @FXML private TableColumn<CartItem, Double>  colCartPrice;
     @FXML private TableColumn<CartItem, Double>  colCartSub;
 
-    // ── Input fields ───────────────────────────────────────────────
     @FXML private Spinner<Integer> quantityField;
     @FXML private Spinner<Integer> updateQtyField;
 
-    // ── Labels ─────────────────────────────────────────────────────
     @FXML private Label totalLabel;
     @FXML private Label headerTotalLabel;
     @FXML private Label cartBadgeLabel;
     @FXML private Label statusLabel;
 
-    // ── Backend objects ────────────────────────────────────────────
     private ProductCatalog catalog;
     private ShoppingCart   cart;
     private OrderProcessor processor;
 
-    // Observable lists — bound to the TableViews
     private ObservableList<Product>  productObsList;
     private ObservableList<CartItem> cartObsList;
-
-    //  Initialization
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,53 +63,44 @@ public class GUI implements Initializable {
         initCartTable();
     }
 
-    /** Populate the catalog with demo products. */
     private void seedCatalog() {
-        catalog.addProduct(new Product(1,  "Samsung Galaxy A55",  89999, 15));
-        catalog.addProduct(new Product(2,  "Apple AirPods Pro",   45000,  8));
-        catalog.addProduct(new Product(3,  "Nike Air Max 270",    18500, 20));
-        catalog.addProduct(new Product(4,  "Levi's 511 Slim Fit",  7500, 30));
-        catalog.addProduct(new Product(5,  "Nescafé Gold 200g",    2200, 50));
-        catalog.addProduct(new Product(6,  "Harry Potter Box Set", 4800, 12));
-        catalog.addProduct(new Product(7,  "PlayStation 5 Pad",   12000,  6));
-        catalog.addProduct(new Product(8,  "Anker Power Bank",     5500, 18));
+        catalog.addProduct(new Product(1, "Samsung Galaxy A55",  89999, 15));
+        catalog.addProduct(new Product(2, "Apple AirPods Pro",   45000,  8));
+        catalog.addProduct(new Product(3, "Nike Air Max 270",    18500, 20));
+        catalog.addProduct(new Product(4, "Levi's 511 Slim Fit",  7500, 30));
+        catalog.addProduct(new Product(5, "Nescafe Gold 200g",    2200, 50));
+        catalog.addProduct(new Product(6, "Harry Potter Box Set", 4800, 12));
+        catalog.addProduct(new Product(7, "PlayStation 5 Pad",   12000,  6));
+        catalog.addProduct(new Product(8, "Anker Power Bank",     5500, 18));
     }
-
-    // ── Product TableView ──────────────────────────────────────────
 
     private void initProductTable() {
         colProdId.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(cd.getValue().getProductId()));
-
         colProdName.setCellValueFactory(
                 cd -> new SimpleStringProperty(cd.getValue().getName()));
-
         colProdPrice.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(cd.getValue().getPrice()));
-
         colProdStock.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(cd.getValue().getAvailableStock()));
 
-        // Format price column
         colProdPrice.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
-                setText(empty || price == null ? null
-                        : String.format("PKR %,.0f", price));
+                setText(empty || price == null ? null : String.format("PKR %,.0f", price));
             }
         });
 
-        // Colour stock red if low (≤ 3)
+        // stock-low (red) if <= 3, stock-ok (green) otherwise
         colProdStock.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer stock, boolean empty) {
                 super.updateItem(stock, empty);
-                if (empty || stock == null) { setText(null); setStyle(""); return; }
+                getStyleClass().removeAll("stock-low", "stock-ok");
+                if (empty || stock == null) { setText(null); return; }
                 setText(String.valueOf(stock));
-                setStyle(stock <= 3
-                        ? "-fx-text-fill: #ff5555; -fx-font-weight: bold;"
-                        : "-fx-text-fill: #41c78c;");
+                getStyleClass().add(stock <= 3 ? "stock-low" : "stock-ok");
             }
         });
 
@@ -128,18 +108,13 @@ public class GUI implements Initializable {
         productTable.setItems(productObsList);
     }
 
-    // ── Cart TableView ─────────────────────────────────────────────
-
     private void initCartTable() {
         colCartName.setCellValueFactory(
                 cd -> new SimpleStringProperty(cd.getValue().getProduct().getName()));
-
         colCartQty.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(cd.getValue().getQuantity()));
-
         colCartPrice.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(cd.getValue().getProduct().getPrice()));
-
         colCartSub.setCellValueFactory(
                 cd -> new SimpleObjectProperty<>(
                         cd.getValue().getProduct().getPrice() * cd.getValue().getQuantity()));
@@ -152,14 +127,14 @@ public class GUI implements Initializable {
             }
         });
 
-        // Subtotal in amber
+        // subtotal column styled amber via .subtotal-cell
         colCartSub.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Double v, boolean empty) {
                 super.updateItem(v, empty);
-                if (empty || v == null) { setText(null); setStyle(""); return; }
+                if (empty || v == null) { setText(null); return; }
                 setText(String.format("PKR %,.0f", v));
-                setStyle("-fx-text-fill: #ffb932; -fx-font-weight: bold;");
+                getStyleClass().add("subtotal-cell");
             }
         });
 
@@ -167,7 +142,6 @@ public class GUI implements Initializable {
         cartTable.setItems(cartObsList);
     }
 
-    //  Button Handlers
     @FXML
     private void handleAddToCart() {
         Product selected = productTable.getSelectionModel().getSelectedItem();
@@ -181,7 +155,7 @@ public class GUI implements Initializable {
         try {
             cart.addProduct(selected, qty);
             refreshCart();
-            productTable.refresh(); // reflect updated available stock
+            productTable.refresh();
             setStatus("✅  Added " + qty + "×  " + selected.getName() + " to cart.", false);
             quantityField.getValueFactory().setValue(1);
         } catch (InvalidQuantityException | InsufficientStockException e) {
@@ -189,7 +163,6 @@ public class GUI implements Initializable {
         }
     }
 
-    /** Remove selected cart item. */
     @FXML
     private void handleRemove() {
         CartItem selected = cartTable.getSelectionModel().getSelectedItem();
@@ -208,7 +181,6 @@ public class GUI implements Initializable {
         }
     }
 
-    /** Update quantity of selected cart item. */
     @FXML
     private void handleUpdate() {
         CartItem selected = cartTable.getSelectionModel().getSelectedItem();
@@ -230,50 +202,46 @@ public class GUI implements Initializable {
         }
     }
 
-    /** Validate cart and open payment dialog. */
     @FXML
     private void handleCheckout() {
         try {
-            Order order = processor.checkout(cart);   // throws EmptyCartException
+            Order order = processor.checkout(cart);
             showPaymentDialog(order);
         } catch (EmptyCartException e) {
             setStatus("⚠  " + e.getMessage(), true);
         }
     }
 
-    //  Payment Dialog
-
     private void showPaymentDialog(Order order) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(productTable.getScene().getWindow());
-        dialog.setTitle("Payment Gateway — Order #" + order.getOrderId());
+        dialog.setTitle("Payment — Order #" + order.getOrderId());
         dialog.setResizable(false);
 
         VBox root = new VBox(16);
-        root.setStyle("-fx-background-color: #161a23; -fx-padding: 28;");
+        root.getStyleClass().add("payment-dialog");
         root.setPrefWidth(420);
+
+        // load GUI.css into this new stage's scene
+        root.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
 
         boolean needsAdvance = order.getTotalAmount() >= 5000;
 
-        // ── Header labels ──
         Label titleLbl = new Label("Select Payment Method");
-        titleLbl.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ebecf5;");
+        titleLbl.getStyleClass().add("dialog-title");
 
         Label amtLbl = new Label("Total:  PKR " + String.format("%,.2f", order.getTotalAmount()));
-        amtLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffb932;");
+        amtLbl.getStyleClass().add("dialog-amount");
 
         Label noticeLbl = new Label(needsAdvance
-                ? "⚠  Total ≥ PKR 5,000 — Cash on Delivery is not available."
+                ? "⚠  Total >= PKR 5,000 — Cash on Delivery is not available."
                 : "✅  Eligible for any payment method.");
-        noticeLbl.setStyle("-fx-font-size: 11px; -fx-text-fill: "
-                + (needsAdvance ? "#ffa500" : "#41c78c") + ";");
+        noticeLbl.getStyleClass().add(needsAdvance ? "notice-warning" : "notice-success");
         noticeLbl.setWrapText(true);
 
         Separator sep = new Separator();
-        sep.setStyle(".separator *.line { -fx-border-color: #262e3c; }");
 
-        // ── Payment options ──
         List<PaymentGateway> gateways = Arrays.asList(
                 new CashOnDelivery(),
                 new CreditCard(),
@@ -284,46 +252,30 @@ public class GUI implements Initializable {
         VBox optBox = new VBox(8);
 
         for (PaymentGateway gw : gateways) {
-            boolean isCOD    = gw instanceof CashOnDelivery;
-            boolean disabled = isCOD && needsAdvance;
+            boolean disabled = (gw instanceof CashOnDelivery) && needsAdvance;
 
             RadioButton rb = new RadioButton(gw.getMethodName());
             rb.setToggleGroup(tg);
-            rb.setDisable(disabled);
+            rb.setDisable(disabled);   // .payment-option:disabled handles color in CSS
             rb.setMaxWidth(Double.MAX_VALUE);
             rb.setUserData(gw);
-            rb.setStyle(
-                    "-fx-text-fill: " + (disabled ? "#4a5270" : "#ebecf5") + ";"
-                            + "-fx-font-size: 13px;"
-                            + "-fx-padding: 12 16;"
-                            + "-fx-background-color: #1e2330;"
-                            + "-fx-background-radius: 6;"
-            );
+            rb.getStyleClass().add("payment-option");
             optBox.getChildren().add(rb);
         }
 
-        // Auto-select first enabled option
+        // auto-select first enabled gateway
         tg.getToggles().stream()
                 .filter(t -> !((RadioButton) t).isDisable())
                 .findFirst()
                 .ifPresent(t -> t.setSelected(true));
 
-        // ── Confirm button ──
         Button confirmBtn = new Button("✅   Confirm & Place Order");
         confirmBtn.setMaxWidth(Double.MAX_VALUE);
-        confirmBtn.setStyle(
-                "-fx-background-color: #41c78c;"
-                        + "-fx-text-fill: #0d0f14;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-padding: 12 0;"
-                        + "-fx-background-radius: 8;"
-                        + "-fx-cursor: hand;"
-        );
+        confirmBtn.getStyleClass().add("btn-confirm");
 
         confirmBtn.setOnAction(e -> {
             Toggle selected = tg.getSelectedToggle();
-            if (selected == null) { return; }
+            if (selected == null) return;
 
             PaymentGateway chosen = (PaymentGateway) selected.getUserData();
             boolean ok = chosen.processPayment(order.getTotalAmount());
@@ -333,34 +285,24 @@ public class GUI implements Initializable {
                 refreshCart();
                 productTable.refresh();
                 dialog.close();
-
-                showAlert(
-                        "🎉  Order #" + order.getOrderId() + " Placed!\n\n"
-                                + "Payment via : " + chosen.getMethodName() + "\n"
-                                + "Amount       : PKR " + String.format("%,.2f", order.getTotalAmount())
-                                + "\n\nThank you for shopping with ShopEase!"
-                );
+                showAlert("🎉  Order #" + order.getOrderId() + " Placed!\n\n"
+                        + "Payment via : " + chosen.getMethodName() + "\n"
+                        + "Amount       : PKR " + String.format("%,.2f", order.getTotalAmount())
+                        + "\n\nThank you for shopping with ShopEase!");
                 setStatus("🎉  Order #" + order.getOrderId()
                         + " placed via " + chosen.getMethodName() + ".", false);
-
             } else {
-                // COD refused for large amount
+                // COD refused for orders >= 5000
                 showAlert("❌  " + chosen.getMethodName()
                         + " is not available for this order total.\nPlease choose another method.");
             }
         });
 
         root.getChildren().addAll(titleLbl, amtLbl, noticeLbl, sep, optBox, confirmBtn);
-
         dialog.setScene(new Scene(root));
         dialog.show();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  Helpers
-    // ══════════════════════════════════════════════════════════════
-
-    /** Sync the cart ObservableList and update all summary labels. */
     private void refreshCart() {
         cartObsList.setAll(cart.getItems());
 
@@ -372,15 +314,13 @@ public class GUI implements Initializable {
         cartBadgeLabel.setText(n + " item" + (n != 1 ? "s" : ""));
     }
 
-    /** Set the bottom status bar text and colour. */
+    // clears previous class before applying new state
     private void setStatus(String msg, boolean isError) {
         statusLabel.setText(msg);
-        statusLabel.setStyle(isError
-                ? "-fx-text-fill: #ff5555; -fx-font-size: 11px;"
-                : "-fx-text-fill: #41c78c; -fx-font-size: 11px;");
+        statusLabel.getStyleClass().removeAll("status-error", "status-ok");
+        statusLabel.getStyleClass().add(isError ? "status-error" : "status-ok");
     }
 
-    /** Simple information alert, dark-styled. */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("ShopEase");
@@ -388,13 +328,8 @@ public class GUI implements Initializable {
         alert.setContentText(message);
 
         DialogPane dp = alert.getDialogPane();
-        dp.setStyle("-fx-background-color: #161a23;");
-
-        // Style the text node if accessible
-        try {
-            dp.lookup(".content.label")
-                    .setStyle("-fx-text-fill: #ebecf5; -fx-font-size: 13px;");
-        } catch (Exception ignored) {}
+        dp.getStyleClass().add("dark-dialog");
+        dp.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
 
         alert.showAndWait();
     }
