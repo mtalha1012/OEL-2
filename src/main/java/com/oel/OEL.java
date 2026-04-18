@@ -12,7 +12,7 @@ import javafx.stage.*;
 
 public class OEL extends Application {
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/oel/GUI 2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/oel/GUI.fxml"));
         Scene scene = new Scene(loader.load());
 
         primaryStage.setScene(scene);
