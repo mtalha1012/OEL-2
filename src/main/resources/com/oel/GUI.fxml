@@ -1,16 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.oel.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.oel.GUI"
+            stylesheets="@GUI.css"
+            styleClass="root-pane"
+            prefWidth="1100" prefHeight="720">
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+    <!-- ═══════════════════ TOP HEADER BAR ═══════════════════ -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12">
+
+            <Label text="🛍  ShopEase" styleClass="logo"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="🛒" styleClass="cart-icon"/>
+            <Label fx:id="cartBadgeLabel" text="0 items"  styleClass="cart-badge"/>
+            <Label fx:id="headerTotalLabel" text="PKR 0" HBox.hgrow="ALWAYS" styleClass="header-total"/>
+
+        </HBox>
+    </top>
+
+    <!-- ═══════════════════ CENTRE SPLIT ═══════════════════ -->
+    <center>
+        <SplitPane dividerPositions="0.58" styleClass="main-split">
+
+            <!-- ───── LEFT  :  Product Catalog ───── -->
+            <VBox styleClass="left-panel" spacing="12">
+
+                <Label text="Products" styleClass="panel-title"/>
+
+                <TableView fx:id="productTable" VBox.vgrow="ALWAYS"
+                           styleClass="dark-table">
+                    <columns>
+                        <TableColumn fx:id="colProdId"    text="#"          prefWidth="42"/>
+                        <TableColumn fx:id="colProdName"  text="Name"       prefWidth="210"/>
+                        <TableColumn fx:id="colProdPrice" text="Price (PKR)" prefWidth="130"/>
+                        <TableColumn fx:id="colProdStock" text="Stock"      prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No products available." styleClass="placeholder-lbl"/>
+                    </placeholder>
+                </TableView>
+
+                <!-- Add-to-cart row -->
+                <HBox styleClass="control-row" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Qty:" styleClass="field-label"/>
+                    <TextField fx:id="quantityField"
+                               promptText="1"
+                               prefWidth="60"
+                               styleClass="dark-field"/>
+                    <Button text="＋  Add to Cart"
+                            onAction="#handleAddToCart"
+                            styleClass="btn-accent"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- ───── RIGHT  :  Cart ───── -->
+            <VBox styleClass="right-panel" spacing="12">
+
+                <Label text="Your Cart" styleClass="panel-title"/>
+
+                <TableView fx:id="cartTable" VBox.vgrow="ALWAYS"
+                           styleClass="dark-table">
+                    <columns>
+                        <TableColumn fx:id="colCartName"  text="Product"  prefWidth="165"/>
+                        <TableColumn fx:id="colCartQty"   text="Qty"      prefWidth="50"/>
+                        <TableColumn fx:id="colCartPrice" text="Price"    prefWidth="105"/>
+                        <TableColumn fx:id="colCartSub"   text="Subtotal" prefWidth="115"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Your cart is empty." styleClass="placeholder-lbl"/>
+                    </placeholder>
+                </TableView>
+
+                <!-- Remove / Update row -->
+                <HBox styleClass="control-row" spacing="8" alignment="CENTER_LEFT">
+                    <Button text="🗑  Remove"
+                            onAction="#handleRemove"
+                            styleClass="btn-danger"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="New qty:" styleClass="field-label"/>
+                    <TextField fx:id="updateQtyField"
+                               promptText="qty"
+                               prefWidth="58"
+                               styleClass="dark-field"/>
+                    <Button text="↺  Update"
+                            onAction="#handleUpdate"
+                            styleClass="btn-secondary"/>
+                </HBox>
+
+                <!-- Order total -->
+                <HBox styleClass="total-row" alignment="CENTER_RIGHT" spacing="6">
+                    <Label text="Order Total:" styleClass="total-label"/>
+                    <Label fx:id="totalLabel" text="PKR 0.00" styleClass="total-amount"/>
+                </HBox>
+
+                <!-- Checkout -->
+                <Button text="🛒   Proceed to Checkout"
+                        onAction="#handleCheckout"
+                        maxWidth="Infinity"
+                        styleClass="btn-checkout"/>
+
+            </VBox>
+
+        </SplitPane>
+    </center>
+
+    <!-- ═══════════════════ BOTTOM STATUS BAR ═══════════════════ -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="8">
+            <Label fx:id="statusLabel"
+                   text="👋  Welcome to ShopEase! Select a product and add it to your cart."
+                   styleClass="status-text"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

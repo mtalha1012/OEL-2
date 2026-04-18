@@ -1,0 +1,386 @@
+
+
+/* ── Root / Window ────────────────────────────────────────────── */
+.root-pane {
+    -fx-background-color: #0d0f14;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.header {
+    -fx-background-color: #161a23;
+    -fx-padding: 14 28 14 28;
+    -fx-border-color: #262e3c;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffb932;
+}
+
+.cart-icon {
+    -fx-font-size: 16px;
+    -fx-text-fill: #828aa5;
+}
+
+.cart-badge {
+    -fx-text-fill: #828aa5;
+    -fx-font-size: 13px;
+}
+
+.header-total {
+    -fx-text-fill: #ffb932;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* ── Panels ───────────────────────────────────────────────────── */
+.left-panel {
+    -fx-background-color: #0d0f14;
+    -fx-padding: 18 18 16 18;
+}
+
+.right-panel {
+    -fx-background-color: #1a1f2e;
+    -fx-padding: 18 18 16 18;
+}
+
+.panel-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ebecf5;
+}
+
+/* ── TableView ────────────────────────────────────────────────── */
+.dark-table {
+    -fx-background-color: #161a23;
+    -fx-border-color: #262e3c;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.dark-table > .virtual-flow > .clipped-container > .sheet > .table-row-cell {
+    -fx-background-color: #161a23;
+}
+
+.dark-table .column-header-background {
+    -fx-background-color: #1e2330;
+}
+
+.dark-table .column-header,
+.dark-table .filler {
+    -fx-background-color: #1e2330;
+    -fx-border-color: transparent #262e3c transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-size: 36px;
+}
+
+.dark-table .column-header .label {
+    -fx-text-fill: #828aa5;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 8;
+}
+
+.dark-table .table-row-cell {
+    -fx-background-color: #161a23;
+    -fx-border-color: transparent transparent #1e2330 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 38px;
+}
+
+.dark-table .table-row-cell:odd {
+    -fx-background-color: #18202e;
+}
+
+.dark-table .table-row-cell:hover {
+    -fx-background-color: #222840;
+}
+
+.dark-table .table-row-cell:selected {
+    -fx-background-color: #2a3555 !important;
+}
+
+.dark-table .table-cell {
+    -fx-text-fill: #d8dae8;
+    -fx-font-size: 12px;
+    -fx-padding: 0 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-color: transparent;
+}
+
+/* Subtotal column gets accent colour — set inline in controller */
+
+.dark-table .table-row-cell:empty {
+    -fx-background-color: #161a23;
+    -fx-border-color: transparent;
+}
+
+/* Scrollbar inside tables */
+.dark-table .scroll-bar:vertical,
+.dark-table .scroll-bar:horizontal {
+    -fx-background-color: #161a23;
+}
+
+.dark-table .scroll-bar .thumb {
+    -fx-background-color: #2e3650;
+    -fx-background-radius: 4;
+}
+
+.dark-table .scroll-bar .track,
+.dark-table .scroll-bar .track-background {
+    -fx-background-color: #161a23;
+    -fx-border-color: transparent;
+}
+
+.dark-table .scroll-bar .increment-button,
+.dark-table .scroll-bar .decrement-button {
+    -fx-background-color: #161a23;
+    -fx-border-color: transparent;
+    -fx-padding: 2;
+}
+
+.dark-table .scroll-bar .increment-arrow,
+.dark-table .scroll-bar .decrement-arrow {
+    -fx-background-color: #828aa5;
+    -fx-shape: " ";     /* hide default arrows */
+    -fx-padding: 2 4;
+}
+
+/* Placeholder label */
+.placeholder-lbl {
+    -fx-text-fill: #828aa5;
+    -fx-font-size: 13px;
+}
+
+/* ── Control row ──────────────────────────────────────────────── */
+.control-row {
+    -fx-padding: 2 0 0 0;
+}
+
+.field-label {
+    -fx-text-fill: #828aa5;
+    -fx-font-size: 12px;
+}
+
+/* ── Text fields ──────────────────────────────────────────────── */
+.dark-field {
+    -fx-background-color: #1e2330;
+    -fx-text-fill: #ebecf5;
+    -fx-prompt-text-fill: #4a5270;
+    -fx-border-color: #2e3650;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-font-size: 12px;
+}
+
+.dark-field:focused {
+    -fx-border-color: #ffb932;
+    -fx-background-color: #252c3e;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+
+/* Primary — amber */
+.btn-accent {
+    -fx-background-color: #ffb932;
+    -fx-text-fill: #0d0f14;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 7 18;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.btn-accent:hover {
+    -fx-background-color: #ffc94d;
+}
+
+.btn-accent:pressed {
+    -fx-background-color: #e6a520;
+}
+
+/* Danger — red outline */
+.btn-danger {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff5555;
+    -fx-border-color: #ff5555;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 12px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #ff5555;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-danger:pressed {
+    -fx-background-color: #cc3333;
+    -fx-text-fill: #ffffff;
+}
+
+/* Secondary — grey outline */
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #828aa5;
+    -fx-border-color: #828aa5;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 12px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #828aa5;
+    -fx-text-fill: #0d0f14;
+}
+
+/* ── Total row ────────────────────────────────────────────────── */
+.total-row {
+    -fx-padding: 6 4 4 4;
+    -fx-border-color: #262e3c;
+    -fx-border-width: 1 0 0 0;
+}
+
+.total-label {
+    -fx-text-fill: #828aa5;
+    -fx-font-size: 14px;
+}
+
+.total-amount {
+    -fx-text-fill: #ffb932;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* ── Checkout button ──────────────────────────────────────────── */
+.btn-checkout {
+    -fx-background-color: #ffb932;
+    -fx-text-fill: #0d0f14;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 0;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.btn-checkout:hover {
+    -fx-background-color: #ffd166;
+}
+
+.btn-checkout:pressed {
+    -fx-background-color: #e6a520;
+}
+
+/* ── Status bar ───────────────────────────────────────────────── */
+.status-bar {
+    -fx-background-color: #161a23;
+    -fx-padding: 8 20;
+    -fx-border-color: #262e3c;
+    -fx-border-width: 1 0 0 0;
+}
+
+.status-text {
+    -fx-text-fill: #828aa5;
+    -fx-font-size: 11px;
+}
+
+/* ── SplitPane ────────────────────────────────────────────────── */
+.main-split {
+    -fx-background-color: #0d0f14;
+    -fx-padding: 0;
+}
+
+.main-split > .split-pane-divider {
+    -fx-background-color: #262e3c;
+    -fx-padding: 0 1.5;
+}
+
+/* ── Separator (used in payment dialog) ──────────────────────── */
+.separator *.line {
+    -fx-border-color: #262e3c;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── Spinner ──────────────────────────────────────────────────── */
+
+/* Container */
+.spinner {
+    -fx-background-color: #1e2330;
+    -fx-border-color: #2e3650;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.spinner:focused,
+.spinner:contains-focus {
+    -fx-border-color: #ffb932;
+    -fx-background-color: #252c3e;
+}
+
+/* Text editor inside spinner */
+.spinner .text-field,
+.spinner .editor {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ebecf5;
+    -fx-cursor: text;
+}
+
+/* Arrow buttons — shared */
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #252c3e;
+    -fx-border-color: #2e3650;
+    -fx-cursor: hand;
+}
+
+/* Arrow glyphs — amber accent */
+.spinner .increment-arrow-button .increment-arrow {
+    -fx-background-color: #ffb932;
+}
+
+.spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: #ffb932;
+}
+
+/* Hover — lighter slate */
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #2e3650;
+}
+
+/* Pressed — deeper slate */
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed {
+    -fx-background-color: #1a1f2e;
+}
+
+/* Arrow glow on hover */
+.spinner .increment-arrow-button:hover .increment-arrow,
+.spinner .decrement-arrow-button:hover .decrement-arrow {
+    -fx-background-color: #ffc94d;
+}
+
+/* Disabled state */
+.spinner:disabled {
+    -fx-opacity: 0.45;
+}
+
+.payment-dialog {
+    -fx-background-color: midnightblue;
+    -fx-padding: 28;
+}

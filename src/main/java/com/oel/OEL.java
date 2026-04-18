@@ -5,17 +5,21 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.stage.*;
 
-public class OEL {
-    public static void main(String[] args) throws IOException {
-        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("resources/com/oel/GUI.fxml"));
+public class OEL extends Application {
+    public void start(Stage primaryStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/oel/GUI 2.fxml"));
         Scene scene = new Scene(loader.load());
 
-        Stage primaryStage = new Stage();
         primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    public static void main(String[] args) {
+        launch(args);
     }
 }
 
@@ -92,6 +96,10 @@ class ProductCatalog {
         for (Product p : inventory) {
             System.out.println(p);
         }
+    }
+
+    public List<Product> getInventory() {
+        return inventory;
     }
 }
 
