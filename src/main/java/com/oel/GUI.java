@@ -66,6 +66,9 @@ public class GUI implements Initializable {
         quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
         updateQtyField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
 
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        cartTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         seedCatalog();
         initProductTable();
         initCartTable();
@@ -115,6 +118,9 @@ public class GUI implements Initializable {
                 super.updateItem(stock, empty);
                 if (empty || stock == null) { setText(null); setStyle(""); return; }
                 setText(String.valueOf(stock));
+                setStyle(stock <= 3
+                        ? "-fx-text-fill: #ff5555; -fx-font-weight: bold;"
+                        : "-fx-text-fill: #41c78c;");
             }
         });
 
@@ -153,6 +159,7 @@ public class GUI implements Initializable {
                 super.updateItem(v, empty);
                 if (empty || v == null) { setText(null); setStyle(""); return; }
                 setText(String.format("PKR %,.0f", v));
+                setStyle("-fx-text-fill: #ffb932; -fx-font-weight: bold;");
             }
         });
 
@@ -160,11 +167,7 @@ public class GUI implements Initializable {
         cartTable.setItems(cartObsList);
     }
 
-    // ══════════════════════════════════════════════════════════════
     //  Button Handlers
-    // ══════════════════════════════════════════════════════════════
-
-    /** Add selected product to cart. */
     @FXML
     private void handleAddToCart() {
         Product selected = productTable.getSelectionModel().getSelectedItem();
@@ -238,9 +241,7 @@ public class GUI implements Initializable {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
     //  Payment Dialog
-    // ══════════════════════════════════════════════════════════════
 
     private void showPaymentDialog(Order order) {
         Stage dialog = new Stage();
@@ -250,27 +251,27 @@ public class GUI implements Initializable {
         dialog.setResizable(false);
 
         VBox root = new VBox(16);
-        root.setStyle("payment-dialog");
+        root.setStyle("-fx-background-color: #161a23; -fx-padding: 28;");
         root.setPrefWidth(420);
 
         boolean needsAdvance = order.getTotalAmount() >= 5000;
 
         // ── Header labels ──
         Label titleLbl = new Label("Select Payment Method");
-        titleLbl.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: ghostwhite;");
+        titleLbl.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ebecf5;");
 
         Label amtLbl = new Label("Total:  PKR " + String.format("%,.2f", order.getTotalAmount()));
-        amtLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: goldenrod;");
+        amtLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffb932;");
 
         Label noticeLbl = new Label(needsAdvance
                 ? "⚠  Total ≥ PKR 5,000 — Cash on Delivery is not available."
                 : "✅  Eligible for any payment method.");
         noticeLbl.setStyle("-fx-font-size: 11px; -fx-text-fill: "
-                + (needsAdvance ? "orange" : "mediumseagreen") + ";");
+                + (needsAdvance ? "#ffa500" : "#41c78c") + ";");
         noticeLbl.setWrapText(true);
 
         Separator sep = new Separator();
-        sep.setStyle(".separator *.line { -fx-border-color: dimgray; }");
+        sep.setStyle(".separator *.line { -fx-border-color: #262e3c; }");
 
         // ── Payment options ──
         List<PaymentGateway> gateways = Arrays.asList(
@@ -292,10 +293,10 @@ public class GUI implements Initializable {
             rb.setMaxWidth(Double.MAX_VALUE);
             rb.setUserData(gw);
             rb.setStyle(
-                    "-fx-text-fill: " + (disabled ? "slategray" : "ghostwhite") + ";"
+                    "-fx-text-fill: " + (disabled ? "#4a5270" : "#ebecf5") + ";"
                             + "-fx-font-size: 13px;"
                             + "-fx-padding: 12 16;"
-                            + "-fx-background-color: darkslateblue;"
+                            + "-fx-background-color: #1e2330;"
                             + "-fx-background-radius: 6;"
             );
             optBox.getChildren().add(rb);
@@ -311,8 +312,8 @@ public class GUI implements Initializable {
         Button confirmBtn = new Button("✅   Confirm & Place Order");
         confirmBtn.setMaxWidth(Double.MAX_VALUE);
         confirmBtn.setStyle(
-                "-fx-background-color: mediumseagreen;"
-                        + "-fx-text-fill: black;"
+                "-fx-background-color: #41c78c;"
+                        + "-fx-text-fill: #0d0f14;"
                         + "-fx-font-weight: bold;"
                         + "-fx-font-size: 14px;"
                         + "-fx-padding: 12 0;"
@@ -375,8 +376,8 @@ public class GUI implements Initializable {
     private void setStatus(String msg, boolean isError) {
         statusLabel.setText(msg);
         statusLabel.setStyle(isError
-                ? "-fx-text-fill: tomato; -fx-font-size: 11px;"
-                : "-fx-text-fill: mediumseagreen; -fx-font-size: 11px;");
+                ? "-fx-text-fill: #ff5555; -fx-font-size: 11px;"
+                : "-fx-text-fill: #41c78c; -fx-font-size: 11px;");
     }
 
     /** Simple information alert, dark-styled. */
@@ -387,12 +388,12 @@ public class GUI implements Initializable {
         alert.setContentText(message);
 
         DialogPane dp = alert.getDialogPane();
-        dp.setStyle("-fx-background-color: midnightblue;");
+        dp.setStyle("-fx-background-color: #161a23;");
 
         // Style the text node if accessible
         try {
             dp.lookup(".content.label")
-                    .setStyle("-fx-text-fill: ghostwhite; -fx-font-size: 13px;");
+                    .setStyle("-fx-text-fill: #ebecf5; -fx-font-size: 13px;");
         } catch (Exception ignored) {}
 
         alert.showAndWait();
